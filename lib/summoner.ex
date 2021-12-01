@@ -11,12 +11,7 @@ defmodule Summoner do
   def handle_summoners do
     HTTPoison.start()
 
-    # summoner_name = IO.gets("Enter summoner name\n") |> String.trim()
-
-    # {:ok, region} =
-    #   IO.gets("Enter region or platform\n")
-    #   |> String.trim()
-    #   |> Regions.region_by_platform_or_region()
+    # {summoner_name, region} = console_input()
 
     summoner_name = "blaber"
     region = "americas"
@@ -36,6 +31,17 @@ defmodule Summoner do
 
     participants
     |> IO.inspect()
+  end
+
+  defp console_input do
+    summoner_name = IO.gets("Enter summoner name\n") |> String.trim()
+
+    {:ok, region} =
+      IO.gets("Enter region or platform\n")
+      |> String.trim()
+      |> Regions.region_by_platform_or_region()
+
+    {summoner_name, region}
   end
 
   defp http_get_match(match_id, region) do

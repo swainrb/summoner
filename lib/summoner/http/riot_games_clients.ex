@@ -22,6 +22,6 @@ defmodule Summoner.HTTP.RiotGamesClients do
   end
 
   defp riot_token do
-    "RGAPI-baa417a6-c3fa-424d-89e4-db436501328c"
+    "RGAPI-c61fd297-62c3-4e92-b281-084c7b0aa8b3"
   end
 end
