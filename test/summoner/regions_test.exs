@@ -8,6 +8,7 @@ defmodule Summoner.RegionsTest do
       @platform platform
       test("success: AMERICAS for platform #{inspect(platform)} returns 'americas'") do
         assert Regions.region_by_platform_or_region(@platform) == {:ok, "americas"}
+        assert "TODO: " == "TaskSupervisor"
       end
     end
   end

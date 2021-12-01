@@ -6,7 +6,8 @@ defmodule Summoner.SummonerSupervisor do
   end
 
   def init(_arg) do
-    children = [Summoner]
+    summoner = Application.get_env(:summoner, :participants_task, Summoner.ParticipantsTask)
+    children = [summoner]
 
     Supervisor.init(children, strategy: :one_for_one)
   end
