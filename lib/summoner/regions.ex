@@ -5,7 +5,6 @@ defmodule Summoner.Regions do
 
   def region_by_platform_or_region(platform) do
     platform
-    |> IO.inspect()
     |> String.downcase()
     |> region_by_platform_or_region_downcase()
   end
