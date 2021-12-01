@@ -3,17 +3,21 @@ defmodule Summoner.Regions do
   @asia ~w(asia kr jp)
   @europe ~w(europe eune euw tr ru)
 
-  def region_by_platform_or_region(platform),
-    do: platform |> String.downcase() |> region_by_platform_or_region_lower()
+  def region_by_platform_or_region(platform) do
+    platform
+    |> IO.inspect()
+    |> String.downcase()
+    |> region_by_platform_or_region_downcase()
+  end
 
-  defp region_by_platform_or_region_lower(platform) when platform in @americas,
+  defp region_by_platform_or_region_downcase(platform) when platform in @americas,
     do: {:ok, List.first(@americas)}
 
-  defp region_by_platform_or_region_lower(platform) when platform in @asia,
+  defp region_by_platform_or_region_downcase(platform) when platform in @asia,
     do: {:ok, List.first(@asia)}
 
-  defp region_by_platform_or_region_lower(platform) when platform in @europe,
+  defp region_by_platform_or_region_downcase(platform) when platform in @europe,
     do: {:ok, List.first(@europe)}
 
-  defp region_by_platform_or_region_lower(_platform), do: {:error, :unknown_platform}
+  defp region_by_platform_or_region_downcase(_platform), do: {:error, :unknown_platform}
 end

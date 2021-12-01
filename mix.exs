@@ -22,7 +22,6 @@ defmodule Summoner.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 1.7"},
       {:jason, "~> 1.2"},
       {:tesla, "~>1.4"}
     ]

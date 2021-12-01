@@ -1,52 +1,21 @@
 defmodule Summoner do
   use Task
 
-  alias Summoner.HTTP.RiotGamesRequests
-  alias Summoner.Regions
+  alias Summoner.{Matches, Participants, Summoners, UserInput}
 
   def start_link(_fun) do
-    Task.start_link(&handle_summoners/0)
+    Task.start_link(&handle_summoner/0)
   end
 
-  def handle_summoners do
-    HTTPoison.start()
-
-    # {summoner_name, region} = console_input()
-
-    summoner_name = "blaber"
-    region = "americas"
-
-    {:ok, summoner_response} = RiotGamesRequests.get_summoner_by_name(summoner_name)
-    summoner_puuid = summoner_response.body.puuid
-
-    {:ok, matches_response} = RiotGamesRequests.get_matches_by_puuid(summoner_puuid, region)
-
-    participants =
-      matches_response.body
-      |> Task.async_stream(&http_get_match(&1, region))
-      |> Enum.reduce(MapSet.new(), fn {:ok, participants}, acc ->
-        MapSet.union(acc, participants)
-      end)
-      |> MapSet.delete(summoner_response.body.puuid)
-
-    participants
-    |> IO.inspect()
-  end
-
-  defp console_input do
-    summoner_name = IO.gets("Enter summoner name\n") |> String.trim()
-
-    {:ok, region} =
-      IO.gets("Enter region or platform\n")
-      |> String.trim()
-      |> Regions.region_by_platform_or_region()
-
-    {summoner_name, region}
-  end
-
-  defp http_get_match(match_id, region) do
-    {:ok, match_response} = RiotGamesRequests.get_match(match_id, region)
-
-    MapSet.new(match_response.body.metadata.participants)
+  def handle_summoner do
+    with summoner_name <- UserInput.summoner_name(),
+         {:ok, puuid} <- Summoners.summoner_puuid_from_name(summoner_name),
+         {:ok, region} <- UserInput.region(),
+         {:ok, matches} <- Matches.valid_matches_for_puuid_and_region(puuid, region),
+         {:ok, participants} <- Participants.matches_participants(puuid, matches, region) do
+      IO.inspect(participants)
+    else
+      _ -> handle_summoner()
+    end
   end
 end
