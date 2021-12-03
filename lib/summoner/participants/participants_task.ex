@@ -1,4 +1,4 @@
-defmodule Summoner.ParticipantsTask do
+defmodule Summoner.Participants.ParticipantsTask do
   use Task
 
   alias Summoner.{Matches, Participants, Summoners, UserInput}

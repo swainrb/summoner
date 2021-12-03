@@ -1,4 +1,4 @@
-defmodule Summoner.FakeParticipantsTask do
+defmodule Summoner.Participants.FakeParticipantsTask do
   @moduledoc """
   Fakes the user input loop that loads as a task in the application supervisor.
   This will avoid having that loop run during tests.

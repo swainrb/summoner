@@ -14,7 +14,7 @@ defmodule Summoner.Participants do
   end
 
   defp http_get_match(match_id, region) do
-    {:ok, match_response} = RiotGamesRequests.get_match(match_id, region)
+    {:ok, match_response} = RiotGamesRequests.impl().get_match(match_id, region)
 
     MapSet.new(match_response.body.metadata.participants)
   end

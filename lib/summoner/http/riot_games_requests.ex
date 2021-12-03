@@ -1,13 +1,16 @@
 defmodule Summoner.HTTP.RiotGamesRequests do
   alias Summoner.HTTP.RiotGamesClients
 
-  def get_summoner_by_name(summoner_name) do
-    client = RiotGamesClients.summoners_client()
+  @callback get_summoner_by_name(String.t()) :: {:ok, %Tesla.Env{}}
 
-    case Tesla.get(client, "/by-name/" <> summoner_name) do
-      {:ok, %{status: 200} = response} -> {:ok, response}
-      _ -> :error
-    end
+  @callback get_matches_for_region_by_puuid(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
+
+  @callback get_match(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
+
+  def get_summoner_by_name(summoner_name) do
+    RiotGamesClients.summoners_client()
+    |> Tesla.get("/by-name/" <> summoner_name)
+    |> IO.inspect()
   end
 
   def get_matches_for_region_by_puuid(region, puuid) do
@@ -26,7 +29,9 @@ defmodule Summoner.HTTP.RiotGamesRequests do
     |> Tesla.get("/" <> match_id)
   end
 
-  defp get_match_start_index do
+  def impl, do: Application.get_env(:summoner, :riot_games_requests, __MODULE__)
+
+  defp get_match_start_index() do
     Integer.to_string(0)
   end
 
