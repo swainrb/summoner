@@ -10,6 +10,7 @@ defmodule Summoner.Participants.ParticipantsTask do
          {:ok, matches} <- Matches.valid_matches_for_puuid_and_region(puuid, region),
          {:ok, participants} <-
            Participants.matches_participants(puuid, matches, region) do
+      IO.inspect(participants)
       {:ok, Map.keys(participants)}
     else
       _ -> handle_participants()

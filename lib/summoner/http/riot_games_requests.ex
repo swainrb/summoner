@@ -10,7 +10,6 @@ defmodule Summoner.HTTP.RiotGamesRequests do
   def get_summoner_by_name(summoner_name) do
     RiotGamesClients.summoners_client()
     |> Tesla.get("/by-name/" <> summoner_name)
-    |> IO.inspect()
   end
 
   def get_matches_for_region_by_puuid(region, puuid) do

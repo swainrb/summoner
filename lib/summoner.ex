@@ -11,11 +11,16 @@ defmodule Summoner do
     summoner =
       Application.get_env(:summoner, :participants_task, Summoner.Participants.ParticipantsTask)
 
-    Task.Supervisor.start_child(
-      ParticipantsSupervisor,
-      summoner,
-      :handle_participants,
-      []
-    )
+    task =
+      Task.Supervisor.async(
+        ParticipantsSupervisor,
+        summoner,
+        :handle_participants,
+        []
+      )
+
+    participants = Task.await(task)
+
+    IO.inspect(participants)
   end
 end
