@@ -19,8 +19,8 @@ defmodule Summoner do
         []
       )
 
-    participants = Task.await(task)
+    {:ok, participants} = Task.await(task)
 
-    IO.inspect(participants)
+    {:ok, IO.inspect(participants)}
   end
 end
