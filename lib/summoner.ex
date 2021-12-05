@@ -19,8 +19,14 @@ defmodule Summoner do
         []
       )
 
+    :ets.new(:participants, [:set, :named_table, :public])
+
     {:ok, participants} = Task.await(task)
 
-    {:ok, IO.inspect(participants)}
+    participants_from_cache =
+      Enum.map(participants, &:ets.lookup(:participants, &1))
+      |> IO.inspect()
+
+    {:ok, participants}
   end
 end
