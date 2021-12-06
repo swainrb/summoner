@@ -1,32 +1,30 @@
 defmodule Summoner do
   use GenServer
 
-  alias Summoner.Participants.TaskSupervisor, as: ParticipantsSupervisor
+  alias Summoner.Participants
 
   def start_link(_) do
-    GenServer.start_link(__MODULE__, :no_args, name: __MODULE__)
+    start = GenServer.start_link(__MODULE__, :no_args, name: __MODULE__)
+    monitor_matches()
+    start
   end
 
   def init(_) do
-    summoner =
-      Application.get_env(:summoner, :participants_task, Summoner.Participants.ParticipantsTask)
-
-    task =
-      Task.Supervisor.async(
-        ParticipantsSupervisor,
-        summoner,
-        :handle_participants,
-        []
-      )
-
     :ets.new(:participants, [:set, :named_table, :public])
 
-    {:ok, participants} = Task.await(task)
-
-    participants_from_cache =
-      Enum.map(participants, &:ets.lookup(:participants, &1))
-      |> IO.inspect()
+    participants = Participants.participants()
 
     {:ok, participants}
+  end
+
+  def monitor_matches() do
+    GenServer.cast(__MODULE__, :monitor_matches)
+  end
+
+  def handle_cast(:monitor_matches, state) do
+    Enum.map(state, &:ets.lookup(:participants, &1))
+    |> IO.inspect()
+
+    {:noreply, state}
   end
 end

@@ -8,6 +8,7 @@ defmodule Summoner.SummonerSupervisor do
   def init(_arg) do
     children = [
       {Task.Supervisor, name: Summoner.Participants.TaskSupervisor},
+      Summoner.Participants,
       Summoner
     ]
 

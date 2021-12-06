@@ -1,7 +1,8 @@
 defmodule Summoner.Participants.ParticipantsTask do
   use Task
 
-  alias Summoner.{Matches, Participants, Summoners}
+  alias Summoner.{Matches, Summoners}
+  alias Summoner.Participants.MatchesParticipants
 
   def handle_participants do
     with summoner_name <- user_input_instance().summoner_name(),
@@ -9,7 +10,7 @@ defmodule Summoner.Participants.ParticipantsTask do
          {:ok, region} <- user_input_instance().region(),
          {:ok, matches} <- Matches.valid_matches_for_puuid_and_region(puuid, region),
          {:ok, participants} <-
-           Participants.matches_participants(puuid, matches, region) do
+           MatchesParticipants.matches_participants(matches, region) do
       Enum.each(participants, &:ets.insert(:participants, &1))
       {:ok, Map.keys(participants)}
     else

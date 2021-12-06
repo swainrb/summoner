@@ -1,7 +1,7 @@
-defmodule Summoner.Participants do
+defmodule Summoner.Participants.MatchesParticipants do
   alias Summoner.HTTP.RiotGamesRequests
 
-  def matches_participants(puuid, matches, region) do
+  def matches_participants(matches, region) do
     participants =
       matches
       |> Task.async_stream(&http_get_match(&1, region))
