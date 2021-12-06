@@ -18,7 +18,7 @@ defmodule Summoner.HTTP.RiotGamesRequests do
     |> Tesla.get(
       "/by-puuid/" <>
         puuid <>
-        "/ids?start=" <> get_match_start_index() <> "&count=" <> get_match_count()
+        "/ids?" <> "&count=" <> match_count()
     )
   end
 
@@ -30,11 +30,7 @@ defmodule Summoner.HTTP.RiotGamesRequests do
 
   def impl, do: Application.get_env(:summoner, :riot_games_requests, __MODULE__)
 
-  defp get_match_start_index() do
-    Integer.to_string(0)
-  end
-
-  defp get_match_count do
+  defp match_count do
     Integer.to_string(5)
   end
 end
