@@ -1,6 +1,7 @@
 defmodule Summoner do
   use GenServer
 
+  alias Summoner.Cache
   alias Summoner.Participants
 
   def start_link(_) do
@@ -11,10 +12,9 @@ defmodule Summoner do
     start
   end
 
+  @impl true
   def init(_) do
-    :ets.new(:region, [:set, :named_table, :public])
-    :ets.new(:participants, [:set, :named_table, :public])
-
+    Cache.init_cache()
     participants = Participants.participants()
 
     {:ok, participants}
@@ -22,15 +22,17 @@ defmodule Summoner do
 
   def monitor_matches(), do: GenServer.cast(__MODULE__, :monitor_matches)
 
+  @impl true
   def handle_cast(:monitor_matches, state) do
-    Enum.map(state, &:ets.lookup(:participants, &1))
+    Enum.map(state, Cache.lookup_participants())
     |> List.flatten()
     |> split_for_rate_limit_delay()
 
     {:noreply, state}
   end
 
-  def handle_info(:kill, _state) do
+  @impl true
+  def handle_info(:kill_application, _state) do
     System.stop()
   end
 

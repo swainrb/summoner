@@ -1,6 +1,7 @@
 defmodule Summoner.MatchesMonitor do
   use GenServer
 
+  alias Summoner.Cache
   alias Summoner.HTTP.RiotGamesRequests
 
   def start_link({_summoner_name, _puuid} = init_args) do
@@ -19,7 +20,7 @@ defmodule Summoner.MatchesMonitor do
   def handle_info(:find_new_matches, {summoner_name, puuid, last_check_time}) do
     {:ok, now} = DateTime.now("Etc/UTC")
 
-    [{_, region}] = :ets.lookup(:region, "region")
+    region = Cache.lookup_region()
 
     {:ok, response} =
       RiotGamesRequests.get_matches_for_region_by_puuid_from_start_time(

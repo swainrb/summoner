@@ -1,7 +1,7 @@
 defmodule Summoner.Participants.ParticipantsTask do
   use Task
 
-  alias Summoner.{Matches, Summoners}
+  alias Summoner.{Cache, Matches, Summoners}
   alias Summoner.Participants.MatchesParticipants
 
   def handle_participants do
@@ -13,8 +13,9 @@ defmodule Summoner.Participants.ParticipantsTask do
          {:ok, participants} <-
            MatchesParticipants.matches_participants(matches, region) do
       participants = Map.delete(participants, summoner_name_server)
-      :ets.insert(:region, {"region", region})
-      Enum.each(participants, &:ets.insert(:participants, &1))
+
+      Cache.insert_region(region)
+      Cache.insert_participants(participants)
 
       {:ok, Map.keys(participants)}
     else
