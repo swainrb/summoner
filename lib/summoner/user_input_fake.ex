@@ -1,9 +1,11 @@
 defmodule Summoner.UserInputFake do
+  alias Summoner.Regions
+
   def summoner_name do
-    "blaber"
+    "Ýena"
   end
 
   def region do
-    {:ok, "americas"}
+    Regions.resolve_region("na")
   end
 end

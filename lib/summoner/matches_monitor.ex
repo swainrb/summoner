@@ -18,21 +18,29 @@ defmodule Summoner.MatchesMonitor do
 
   def handle_info(:find_new_matches, {summoner_name, puuid, last_check_time}) do
     {:ok, now} = DateTime.now("Etc/UTC")
-    now_iso = DateTime.to_iso8601(now)
 
     {:ok, response} = get_matches_for_region_by_puuid(puuid, last_check_time)
-    IO.inspect(response.status)
+    output_matches(summoner_name, response.body)
 
-    # IO.puts(now_iso <> " - " <> summoner_name <> ": " <> puuid)
+    {:noreply, {summoner_name, puuid, now}, {:continue, nil}}
+  end
+
+  def handle_continue(_continue, state) do
     send_matches_after(self())
-    {:noreply, {summoner_name, puuid, now}}
+    {:noreply, state}
+  end
+
+  defp output_matches(summoner_name, matches) do
+    Enum.each(matches, fn match ->
+      IO.puts("Summoner " <> summoner_name <> " completed match " <> match)
+    end)
   end
 
   defp wait_time() do
     60000
   end
 
-  def get_matches_for_region_by_puuid(puuid, end_time) do
+  def get_matches_for_region_by_puuid(puuid, start_time) do
     [{_, region}] = :ets.lookup(:region, "region")
 
     region
@@ -40,7 +48,7 @@ defmodule Summoner.MatchesMonitor do
     |> Tesla.get(
       "/by-puuid/" <>
         puuid <>
-        "/ids?" <> "&count=5&endTime=" <> Integer.to_string(DateTime.to_unix(end_time))
+        "/ids?" <> "&count=5&startTime=" <> Integer.to_string(DateTime.to_unix(start_time))
     )
   end
 end

@@ -26,14 +26,10 @@ defmodule Summoner do
     |> List.flatten()
     |> split_for_rate_limit_delay()
 
-    [{_, region}] = :ets.lookup(:region, "region")
-    IO.inspect(region)
-
     {:noreply, state}
   end
 
   def handle_info(:kill, _state) do
-    IO.puts("Terminating")
     System.stop()
   end
 
@@ -42,7 +38,10 @@ defmodule Summoner do
   end
 
   defp split_for_rate_limit_delay(participants) do
-    {take, wait} = Enum.split(participants, 10)
+    {take, wait} =
+      participants
+      |> Enum.filter(&(elem(&1, 1) != "BOT"))
+      |> Enum.split(10)
 
     Enum.each(
       take,
@@ -52,11 +51,11 @@ defmodule Summoner do
       )
     )
 
-    :timer.sleep(1000)
+    :timer.sleep(5000)
     split_for_rate_limit_delay(wait)
   end
 
   defp kill_time() do
-    130_000
+    1000 * 60 * 60
   end
 end

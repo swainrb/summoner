@@ -1,14 +1,16 @@
 defmodule Summoner.HTTP.RiotGamesRequests do
   alias Summoner.HTTP.RiotGamesClients
 
-  @callback get_summoner_by_name(String.t()) :: {:ok, %Tesla.Env{}}
+  @callback get_summoner_by_name(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
 
   @callback get_matches_for_region_by_puuid(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
 
   @callback get_match(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
 
-  def get_summoner_by_name(summoner_name) do
-    RiotGamesClients.summoners_client()
+  def get_summoner_by_name(summoner_name, subdomain) do
+    summoner_name = String.replace(summoner_name, " ", "")
+
+    RiotGamesClients.summoners_client(subdomain)
     |> Tesla.get("/by-name/" <> summoner_name)
   end
 

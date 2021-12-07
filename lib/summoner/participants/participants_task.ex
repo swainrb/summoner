@@ -6,9 +6,9 @@ defmodule Summoner.Participants.ParticipantsTask do
 
   def handle_participants do
     with summoner_name <- user_input_instance().summoner_name(),
+         {:ok, {region, subdomain}} <- user_input_instance().region(),
          {:ok, {summoner_name_server, puuid}} <-
-           Summoners.summoner_puuid_from_name(summoner_name),
-         {:ok, region} <- user_input_instance().region(),
+           Summoners.summoner_puuid_from_name(summoner_name, subdomain),
          {:ok, matches} <- Matches.valid_matches_for_puuid_and_region(puuid, region),
          {:ok, participants} <-
            MatchesParticipants.matches_participants(matches, region) do
@@ -23,6 +23,6 @@ defmodule Summoner.Participants.ParticipantsTask do
   end
 
   def user_input_instance do
-    Summoner.UserInputFake
+    Summoner.UserInput
   end
 end

@@ -1,22 +1,36 @@
 defmodule Summoner.Regions do
-  @americas ~w(americas na br lan las oce)
-  @asia ~w(asia kr jp)
-  @europe ~w(europe eune euw tr ru)
+  @americas ~w(na br lan las oce)
+  @asia ~w(kr jp)
+  @europe ~w(eune euw tr ru)
 
-  def region_by_platform_or_region(platform) do
-    platform
+  @region_to_subdomain_map %{
+    "br" => "br1",
+    "eune" => "eun1",
+    "euw" => "euw1",
+    "jp" => "jp1",
+    "kr" => "kr",
+    "lan" => "la1",
+    "las" => "la2",
+    "na" => "na1",
+    "oce" => "oc1",
+    "tr" => "tr1",
+    "ru" => "ru"
+  }
+
+  def resolve_region(region) do
+    region
     |> String.downcase()
-    |> region_by_platform_or_region_downcase()
+    |> region_downcase()
   end
 
-  defp region_by_platform_or_region_downcase(platform) when platform in @americas,
-    do: {:ok, List.first(@americas)}
+  defp region_downcase(region) when region in @americas,
+    do: {:ok, {"americas", Map.get(@region_to_subdomain_map, region)}}
 
-  defp region_by_platform_or_region_downcase(platform) when platform in @asia,
-    do: {:ok, List.first(@asia)}
+  defp region_downcase(region) when region in @asia,
+    do: {:ok, {"asia", Map.get(@region_to_subdomain_map, region)}}
 
-  defp region_by_platform_or_region_downcase(platform) when platform in @europe,
-    do: {:ok, List.first(@europe)}
+  defp region_downcase(region) when region in @europe,
+    do: {:ok, {"europe", Map.get(@region_to_subdomain_map, region)}}
 
-  defp region_by_platform_or_region_downcase(_platform), do: {:error, :unknown_platform}
+  defp region_downcase(_region), do: {:error, :unknown_region}
 end

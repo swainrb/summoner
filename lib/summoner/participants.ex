@@ -8,7 +8,7 @@ defmodule Summoner.Participants do
   end
 
   def participants() do
-    GenServer.call(__MODULE__, :participants)
+    GenServer.call(__MODULE__, :participants, :infinity)
   end
 
   @impl true
@@ -27,7 +27,7 @@ defmodule Summoner.Participants do
         []
       )
 
-    {:ok, participants} = Task.await(task)
+    {:ok, participants} = Task.await(task, :infinity)
 
     {:reply, participants, nil}
   end

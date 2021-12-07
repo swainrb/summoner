@@ -7,8 +7,8 @@ defmodule Summoner.UserInput do
   end
 
   def region do
-    IO.gets("Enter region or platform\n")
+    IO.gets("Enter region\n")
     |> String.trim()
-    |> Regions.region_by_platform_or_region()
+    |> Regions.resolve_region()
   end
 end

@@ -22,6 +22,7 @@ defmodule Summoner.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:hackney, "~> 1.17"},
       {:jason, "~> 1.2"},
       {:mox, "~> 1.0"},
       {:tesla, "~>1.4"}

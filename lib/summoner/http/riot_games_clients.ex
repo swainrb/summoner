@@ -1,8 +1,8 @@
 defmodule Summoner.HTTP.RiotGamesClients do
-  def summoners_client(platform \\ "br1") do
+  def summoners_client(subdomain) do
     middleware = [
       {Tesla.Middleware.BaseUrl,
-       "https://" <> platform <> ".api.riotgames.com/lol/summoner/v4/summoners"},
+       "https://" <> subdomain <> ".api.riotgames.com/lol/summoner/v4/summoners"},
       {Tesla.Middleware.JSON, engine_opts: [keys: :atoms]},
       {Tesla.Middleware.Headers, [{"X-Riot-Token", riot_token()}]}
     ]
