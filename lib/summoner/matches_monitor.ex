@@ -1,6 +1,8 @@
 defmodule Summoner.MatchesMonitor do
   use GenServer
 
+  require Logger
+
   alias Summoner.Cache
   alias Summoner.HTTP.RiotGamesRequests
 
@@ -31,7 +33,7 @@ defmodule Summoner.MatchesMonitor do
         last_check_time
       )
 
-    output_matches(summoner_name, response.body)
+    output_matches(summoner_name, response)
 
     {:noreply, {summoner_name, puuid, now}, {:continue, nil}}
   end
@@ -45,10 +47,14 @@ defmodule Summoner.MatchesMonitor do
   #   IO.puts("No matches for summoner " <> summoner_name)
   # end
 
-  defp output_matches(summoner_name, matches) do
+  defp output_matches(summoner_name, %{status: 200, body: matches}) do
     Enum.each(matches, fn match ->
       IO.puts("Summoner " <> summoner_name <> " completed match " <> match)
     end)
+  end
+
+  defp output_matches(summoner_name, %{status: 429}) do
+    Logger.error("Rate limited for match check. Summoner: #{summoner_name}")
   end
 
   defp match_check_wait_time,
