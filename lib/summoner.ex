@@ -7,6 +7,7 @@ defmodule Summoner do
     {:ok, pid} = start = GenServer.start_link(__MODULE__, :no_args, name: __MODULE__)
     Process.send_after(pid, :kill, kill_time())
     monitor_matches()
+    IO.puts("Monitoring matches")
     start
   end
 
@@ -41,7 +42,7 @@ defmodule Summoner do
     {take, wait} =
       participants
       |> Enum.filter(&(elem(&1, 1) != "BOT"))
-      |> Enum.split(10)
+      |> Enum.split(matches_group_size())
 
     Enum.each(
       take,
@@ -51,11 +52,15 @@ defmodule Summoner do
       )
     )
 
-    :timer.sleep(5000)
+    :timer.sleep(wait_between_groups())
     split_for_rate_limit_delay(wait)
   end
 
-  defp kill_time() do
-    1000 * 60 * 60
-  end
+  defp kill_time,
+    do: Application.get_env(:summoner, :application_monitor_time_in_millis, 1000 * 60 * 60)
+
+  defp matches_group_size, do: Application.get_env(:summoner, :matches_per_monitor_group, 10)
+
+  defp wait_between_groups,
+    do: Application.get_env(:summoner, :wait_between_groups_in_millis, 5000)
 end

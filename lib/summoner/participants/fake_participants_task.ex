@@ -14,11 +14,7 @@ defmodule Summoner.Participants.FakeParticipantsTask do
 
   use Task
 
-  def start_link(_fun) do
-    Task.start_link(&handle_participants/0)
-  end
-
   def handle_participants do
-    []
+    {:ok, []}
   end
 end

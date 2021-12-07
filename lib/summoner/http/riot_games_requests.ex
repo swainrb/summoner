@@ -24,6 +24,16 @@ defmodule Summoner.HTTP.RiotGamesRequests do
     )
   end
 
+  def get_matches_for_region_by_puuid_from_start_time(region, puuid, start_time) do
+    region
+    |> Summoner.HTTP.RiotGamesClients.matches_client()
+    |> Tesla.get(
+      "/by-puuid/" <>
+        puuid <>
+        "/ids?" <> "&count=5&startTime=" <> Integer.to_string(DateTime.to_unix(start_time))
+    )
+  end
+
   def get_match(match_id, region) do
     region
     |> RiotGamesClients.matches_client()
@@ -33,6 +43,7 @@ defmodule Summoner.HTTP.RiotGamesRequests do
   def impl, do: Application.get_env(:summoner, :riot_games_requests, __MODULE__)
 
   defp match_count do
-    Integer.to_string(5)
+    Application.get_env(:summoner, :match_count_to_get_participants_from, 5)
+    |> Integer.to_string(5)
   end
 end

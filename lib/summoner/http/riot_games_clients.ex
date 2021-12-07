@@ -21,7 +21,5 @@ defmodule Summoner.HTTP.RiotGamesClients do
     Tesla.client(middleware)
   end
 
-  defp riot_token do
-    "RGAPI-ba395dfb-74f7-4415-acf6-0534962a9f22"
-  end
+  defp riot_token, do: Application.get_env(:summoner, :riot_token)
 end

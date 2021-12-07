@@ -18,6 +18,7 @@ defmodule Summoner.Participants do
   def handle_call(:participants, _from, _state) do
     summoner =
       Application.get_env(:summoner, :participants_task, Summoner.Participants.ParticipantsTask)
+      |> IO.inspect()
 
     task =
       Task.Supervisor.async(
@@ -29,6 +30,6 @@ defmodule Summoner.Participants do
 
     {:ok, participants} = Task.await(task, :infinity)
 
-    {:reply, participants, nil}
+    {:stop, :normal, participants, nil}
   end
 end
