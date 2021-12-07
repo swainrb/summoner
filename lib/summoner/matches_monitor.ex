@@ -5,7 +5,9 @@ defmodule Summoner.MatchesMonitor do
   alias Summoner.HTTP.RiotGamesRequests
 
   def start_link({_summoner_name, _puuid} = init_args) do
-    GenServer.start_link(__MODULE__, init_args)
+    {:ok, pid} = start = GenServer.start_link(__MODULE__, init_args)
+    send_matches_after(pid)
+    start
   end
 
   def init(init_args) do
@@ -38,6 +40,10 @@ defmodule Summoner.MatchesMonitor do
     send_matches_after(self())
     {:noreply, state}
   end
+
+  # defp output_matches(summoner_name, []) do
+  #   IO.puts("No matches for summoner " <> summoner_name)
+  # end
 
   defp output_matches(summoner_name, matches) do
     Enum.each(matches, fn match ->

@@ -6,8 +6,11 @@ defmodule Summoner.Summoners do
       {:ok, %{status: 200} = summoner_response} ->
         {:ok, {summoner_response.body.name, summoner_response.body.puuid}}
 
+      {:ok, %{status: 404}} ->
+        {:error, :summoner_not_found}
+
       _ ->
-        {:error, :user_not_found}
+        {:error, :could_not_get_summoner}
     end
   end
 end
