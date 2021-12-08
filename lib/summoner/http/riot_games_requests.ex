@@ -44,6 +44,6 @@ defmodule Summoner.HTTP.RiotGamesRequests do
 
   defp match_count do
     Application.get_env(:summoner, :match_count_to_get_participants_from, 5)
-    |> Integer.to_string(5)
+    |> Integer.to_string()
   end
 end

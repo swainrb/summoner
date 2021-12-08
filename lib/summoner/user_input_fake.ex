@@ -2,7 +2,7 @@ defmodule Summoner.UserInputFake do
   alias Summoner.Regions
 
   def summoner_name do
-    "Ýena"
+    "Puddi Puddi"
   end
 
   def region do

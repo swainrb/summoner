@@ -6,7 +6,7 @@ defmodule Summoner do
 
   def start_link(_) do
     {:ok, pid} = start = GenServer.start_link(__MODULE__, :no_args, name: __MODULE__)
-    Process.send_after(pid, :kill, kill_time())
+    Process.send_after(pid, :kill_application, kill_time())
     monitor_matches()
     start
   end
@@ -35,35 +35,37 @@ defmodule Summoner do
     System.stop()
   end
 
-  defp split_for_rate_limit_delay([]) do
-    IO.puts("Monitoring matches")
-    :noop
-  end
+  defp split_for_rate_limit_delay([]), do: nil
 
   defp split_for_rate_limit_delay(participants) do
-    {take, wait} =
-      split =
-      participants
-      |> Enum.filter(&(elem(&1, 1) != "BOT"))
-      |> Enum.split(matches_group_size())
+    participants = Enum.filter(participants, &(elem(&1, 1) != "BOT"))
 
-    Enum.each(
-      take,
+    single_check_delay = match_check_wait_time() / Enum.count(participants)
+
+    for n <- 0..(Enum.count(participants) - 1) do
+      (single_check_delay * n)
+      |> round()
+    end
+    |> Enum.zip(participants)
+    |> Task.async_stream(
       &DynamicSupervisor.start_child(
         Summoner.MatchesMonitorSupervisor,
         {Summoner.MatchesMonitor, &1}
       )
     )
+    |> Stream.run()
 
-    :timer.sleep(wait_between_groups())
-    split_for_rate_limit_delay(wait)
+    IO.puts("Monitoring matches")
   end
+
+  defp match_check_wait_time,
+    do:
+      Application.get_env(
+        :summoner,
+        :wait_between_match_checks_in_millis,
+        1000 * 60
+      )
 
   defp kill_time,
     do: Application.get_env(:summoner, :application_monitor_time_in_millis, 1000 * 60 * 60)
-
-  defp matches_group_size, do: Application.get_env(:summoner, :matches_per_monitor_group, 10)
-
-  defp wait_between_groups,
-    do: Application.get_env(:summoner, :wait_between_groups_in_millis, 5000)
 end

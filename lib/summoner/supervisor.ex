@@ -8,6 +8,7 @@ defmodule Summoner.SummonerSupervisor do
   def init(_arg) do
     children = [
       {DynamicSupervisor, strategy: :one_for_one, name: Summoner.MatchesMonitorSupervisor},
+      Summoner.Messages,
       {Task.Supervisor, name: Summoner.Participants.TaskSupervisor},
       Summoner.Participants,
       Summoner
