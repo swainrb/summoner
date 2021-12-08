@@ -1,6 +1,6 @@
 # Summoner
 
-**Reads currently finishing matches for a summoner**
+**Reads currently finishing matches for a summoner's recent match participants from the Riot Games API**
 
 ## Versions
 
