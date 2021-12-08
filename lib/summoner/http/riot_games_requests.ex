@@ -5,6 +5,13 @@ defmodule Summoner.HTTP.RiotGamesRequests do
 
   @callback get_matches_for_region_by_puuid(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
 
+  @callback get_matches_for_region_by_puuid_from_start_to_end_time(
+              String.t(),
+              String.t(),
+              DateTime.t(),
+              DateTime.t()
+            ) :: {:ok, %Tesla.Env{}}
+
   @callback get_match(String.t(), String.t()) :: {:ok, %Tesla.Env{}}
 
   def get_summoner_by_name(summoner_name, subdomain) do

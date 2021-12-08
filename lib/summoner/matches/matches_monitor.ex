@@ -12,6 +12,7 @@ defmodule Summoner.Matches.MatchesMonitor do
     start
   end
 
+  @impl true
   def init(init_args) do
     {:ok, now} = DateTime.now("Etc/UTC")
     {:ok, Tuple.append(init_args, now)}
@@ -21,6 +22,7 @@ defmodule Summoner.Matches.MatchesMonitor do
     Process.send_after(pid, :find_new_matches, delay)
   end
 
+  @impl true
   def handle_info(:find_new_matches, {summoner_name, puuid, last_check_time}) do
     {:ok, now} = DateTime.now("Etc/UTC")
     send_matches_after(self(), match_check_wait_time())
@@ -28,7 +30,7 @@ defmodule Summoner.Matches.MatchesMonitor do
     region = Cache.lookup_region()
 
     {:ok, response} =
-      RiotGamesRequests.get_matches_for_region_by_puuid_from_start_to_end_time(
+      RiotGamesRequests.impl().get_matches_for_region_by_puuid_from_start_to_end_time(
         region,
         puuid,
         last_check_time,
@@ -43,7 +45,7 @@ defmodule Summoner.Matches.MatchesMonitor do
   defp handle_result(summoner_name, %{status: 200, body: matches}) do
     matches
     |> Enum.map(&("Summoner " <> summoner_name <> " completed match " <> &1))
-    |> Messages.send_to_console()
+    |> Messages.impl().send_to_console()
   end
 
   defp handle_result(_summoner_name, %{status: 429}) do
