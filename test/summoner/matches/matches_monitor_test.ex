@@ -11,7 +11,7 @@ defmodule Summoner.Matches.MatchesMonitorTest do
   setup :verify_on_exit!
 
   describe "handle_info/2" do
-    test "Success: console receives match list" do
+    test "Success: console receives list of match responses" do
       summoner_name = "summoner_1"
       puuid = "summoner_1_puuid"
       match_id = "match_1"
