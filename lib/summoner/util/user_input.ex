@@ -1,5 +1,5 @@
-defmodule Summoner.UserInput do
-  alias Summoner.Regions
+defmodule Summoner.Util.UserInput do
+  alias Summoner.Util.Regions
 
   def summoner_name do
     IO.gets("Enter summoner name\n")

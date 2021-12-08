@@ -1,5 +1,5 @@
-defmodule Summoner.UserInputFake do
-  alias Summoner.Regions
+defmodule Summoner.Util.UserInputFake do
+  alias Summoner.Util.Regions
 
   def summoner_name do
     "Puddi Puddi"

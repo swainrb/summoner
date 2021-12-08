@@ -1,9 +1,9 @@
-defmodule Summoner.MatchesMonitor do
+defmodule Summoner.Matches.MatchesMonitor do
   use GenServer
 
   require Logger
 
-  alias Summoner.{Cache, Messages}
+  alias Summoner.Util.{Cache, Messages}
   alias Summoner.HTTP.RiotGamesRequests
 
   def start_link({initial_delay, {_summoner_name, _puuid} = init_args}) do
@@ -28,15 +28,26 @@ defmodule Summoner.MatchesMonitor do
     region = Cache.lookup_region()
 
     {:ok, response} =
-      RiotGamesRequests.get_matches_for_region_by_puuid_from_start_time(
+      RiotGamesRequests.get_matches_for_region_by_puuid_from_start_to_end_time(
         region,
         puuid,
-        last_check_time
+        last_check_time,
+        now
       )
 
-    Messages.process_message({summoner_name, response})
+    handle_result(summoner_name, response)
 
     {:noreply, {summoner_name, puuid, now}}
+  end
+
+  defp handle_result(summoner_name, %{status: 200, body: matches}) do
+    matches
+    |> Enum.map(&("Summoner " <> summoner_name <> " completed match " <> &1))
+    |> Messages.send_to_console()
+  end
+
+  defp handle_result(_summoner_name, %{status: 429}) do
+    Logger.error("Rate limited for match check.")
   end
 
   defp match_check_wait_time,

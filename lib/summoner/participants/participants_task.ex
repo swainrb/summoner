@@ -1,8 +1,9 @@
 defmodule Summoner.Participants.ParticipantsTask do
   use Task
 
-  alias Summoner.{Cache, Matches, Summoners}
+  alias Summoner.{Matches, Summoners}
   alias Summoner.Participants.MatchesParticipants
+  alias Summoner.Util.Cache
 
   def handle_participants do
     with summoner_name <- user_input_instance().summoner_name(),
@@ -24,6 +25,6 @@ defmodule Summoner.Participants.ParticipantsTask do
   end
 
   def user_input_instance do
-    Summoner.UserInput
+    Summoner.Util.UserInput
   end
 end

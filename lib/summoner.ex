@@ -1,7 +1,7 @@
 defmodule Summoner do
   use GenServer
 
-  alias Summoner.Cache
+  alias Summoner.Util.Cache
   alias Summoner.Participants
 
   def start_link(_) do
@@ -49,8 +49,8 @@ defmodule Summoner do
     |> Enum.zip(participants)
     |> Task.async_stream(
       &DynamicSupervisor.start_child(
-        Summoner.MatchesMonitorSupervisor,
-        {Summoner.MatchesMonitor, &1}
+        Summoner.Matches.MatchesMonitorSupervisor,
+        {Summoner.Matches.MatchesMonitor, &1}
       )
     )
     |> Stream.run()

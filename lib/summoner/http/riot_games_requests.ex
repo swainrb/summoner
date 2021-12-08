@@ -24,13 +24,15 @@ defmodule Summoner.HTTP.RiotGamesRequests do
     )
   end
 
-  def get_matches_for_region_by_puuid_from_start_time(region, puuid, start_time) do
+  def get_matches_for_region_by_puuid_from_start_to_end_time(region, puuid, start_time, end_time) do
     region
     |> Summoner.HTTP.RiotGamesClients.matches_client()
     |> Tesla.get(
       "/by-puuid/" <>
         puuid <>
-        "/ids?" <> "&count=5&startTime=" <> Integer.to_string(DateTime.to_unix(start_time))
+        "/ids?&startTime=" <>
+        Integer.to_string(DateTime.to_unix(start_time)) <>
+        "&endTime=" <> Integer.to_string(DateTime.to_unix(end_time))
     )
   end
 

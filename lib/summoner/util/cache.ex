@@ -1,4 +1,4 @@
-defmodule Summoner.Cache do
+defmodule Summoner.Util.Cache do
   def init_cache() do
     :ets.new(:region, [:set, :named_table, :public])
     :ets.new(:participants, [:set, :named_table, :public])

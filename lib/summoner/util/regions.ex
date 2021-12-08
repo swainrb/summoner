@@ -1,4 +1,4 @@
-defmodule Summoner.Regions do
+defmodule Summoner.Util.Regions do
   @americas ~w(na br lan las oce)
   @asia ~w(kr jp)
   @europe ~w(eune euw tr ru)
