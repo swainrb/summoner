@@ -1,21 +1,13 @@
 # Summoner
 
-**TODO: Add description**
+**Reads currently finishing matches for a summoner**
 
-## Installation
+## Versions
+erlang: 24.1.7
+elixir: 1.12.3
+## Running
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `summoner` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:summoner, "~> 0.1.0"}
-  ]
-end
+Run with:
+```bash
+mix run --no-halt
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/summoner](https://hexdocs.pm/summoner).
-
