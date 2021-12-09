@@ -15,4 +15,10 @@ Run with:
 mix run --no-halt
 ```
 
-Takes input at the console.  The region is taken in as the "platform" and the greater region as well as subdomains will be resolved from that.
+Riot games developer key is taken in from system environment variables as `RIOT_GAMES_TOKEN`
+
+Takes input at the console.  The region is taken in as the "platform" and the greater region as well as
+subdomains will be resolved from that.
+
+To run with iex you will need to use the `UserInputFake` with the summoner name and platform placed in there 
+and swap that module into `user_input_instance()` in `ParticipantsFake`.
