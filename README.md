@@ -14,3 +14,5 @@ Run with:
 ```bash
 mix run --no-halt
 ```
+
+Takes input at the console.  The region is taken in as the "platform" and the greater region as well as subdomains will be resolved from that.
