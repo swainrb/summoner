@@ -33,10 +33,11 @@ defmodule Summoner.Participants.ParticipantsTask do
         handle_participants()
 
       {:error, :could_not_get_matches} ->
-        Messages.send_to_console("Could not get matchs")
+        Messages.send_to_console("Could not get matches")
         handle_participants()
 
       _ ->
+        Messages.send_to_console("Unable to start participants monitoring")
         handle_participants()
     end
   end
