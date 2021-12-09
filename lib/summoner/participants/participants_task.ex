@@ -35,6 +35,9 @@ defmodule Summoner.Participants.ParticipantsTask do
       {:error, :could_not_get_matches} ->
         Messages.send_to_console("Could not get matchs")
         handle_participants()
+
+      _ ->
+        handle_participants()
     end
   end
 
