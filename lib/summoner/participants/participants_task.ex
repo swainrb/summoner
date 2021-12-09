@@ -3,7 +3,7 @@ defmodule Summoner.Participants.ParticipantsTask do
 
   alias Summoner.{Matches, Summoners}
   alias Summoner.Participants.MatchesParticipants
-  alias Summoner.Util.Cache
+  alias Summoner.Util.{Cache, Messages}
 
   def handle_participants do
     with summoner_name <- user_input_instance().summoner_name(),
@@ -21,19 +21,19 @@ defmodule Summoner.Participants.ParticipantsTask do
       {:ok, Map.keys(participants)}
     else
       {:error, :summoner_not_found} ->
-        IO.puts("Could not find summoner")
+        Messages.send_to_console("Could not find summoner")
         handle_participants()
 
       {:error, :could_not_get_summoner} ->
-        IO.puts("Error getting summoner")
+        Messages.send_to_console("Error getting summoner")
         handle_participants()
 
       {:error, :unknown_region} ->
-        IO.puts("Unknown region")
+        Messages.send_to_console("Unknown region")
         handle_participants()
 
       {:error, :could_not_get_matches} ->
-        IO.puts("Could not get matchs")
+        Messages.send_to_console("Could not get matchs")
         handle_participants()
     end
   end
